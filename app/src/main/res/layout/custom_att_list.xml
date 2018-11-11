@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    >
+<TextView
+    android:id="@+id/tvAttTime"
+    android:textSize="16dp"
+    android:textColor="@color/md_blue_grey_600"
+    android:gravity="left"
+    android:layout_weight="0.4"
+    android:text="2016-10-25 08:11:11"
+    android:layout_width="40dp"
+    android:layout_height="wrap_content"
+    android:padding="3dp"
+    />
+<TextView
+    android:id="@+id/tvAttStatus"
+    android:textSize="16dp"
+    android:textColor="@color/md_red_A700"
+    android:gravity="right"
+    android:layout_weight="0.6"
+    android:text="Attendance Marked"
+    android:layout_width="60dp"
+    android:layout_height="wrap_content"
+    android:padding="3dp"
+    />
+</LinearLayout>

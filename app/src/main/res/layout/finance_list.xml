@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    >
+
+        <ScrollView
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:fillViewport="true"
+             android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/contantLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Date"
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvDateVal"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Total Amount Received"
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvTotalAmtRec"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Total Amount Paid"
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvTotalAmtPaid"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Total Bill Value"
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvTotalBillVal"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Total Expense "
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvTotalExpense"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:gravity="left"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Total Amount to Deposite"
+                        android:layout_weight="0.7"
+                        />
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:layout_weight="0.3"
+                        android:id="@+id/tvTotalAmtDeposite"
+                        />
+
+                </LinearLayout>
+
+                <!--Finance list-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/caldroid_darker_gray"/>
+
+                <LinearLayout
+                    android:id="@+id/finaceHeader"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Order Ref"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/caldroid_darker_gray"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Bill Value"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/caldroid_darker_gray"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Amount Paid"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="wrap_content"
+                        android:background="@color/caldroid_darker_gray"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Amount Received"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:padding="2dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/caldroid_darker_gray"/>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lvFinance"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Expense List"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    />
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lvExpence"
+                    android:scrollbars="none"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/rlProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="100dp"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:src="@drawable/loader_icon"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/oye_custom_progress_background"
+            style="?android:attr/progressBarStyleLarge"/>
+
+    </RelativeLayout>
+
+     <LinearLayout
+           android:id="@+id/popup_window"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:paddingLeft="20dp"
+           android:paddingRight="20dp"
+           android:paddingTop="20dp"
+           android:visibility="gone" >
+         <CalendarView
+             android:id="@+id/calendarView1"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content" />
+
+     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="No Finance Detail Exist!"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/txtvwNoOrder"
+        />
+
+
+</RelativeLayout>

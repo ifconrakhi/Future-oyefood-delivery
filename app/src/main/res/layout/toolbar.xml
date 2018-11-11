@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:elevation="4dp"
+    android:theme="@style/ActionBarThemeOverlay"
+    app:popupTheme="@style/ActionBarPopupThemeOverlay"
+    android:layout_alignParentTop="true"
+    >
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/attendance"
+        android:text="Stop"
+        android:visibility="gone"
+        android:padding="10dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:id="@+id/tvStop"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/attendance"
+        android:text="Start"
+        android:visibility="gone"
+        android:padding="10dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:id="@+id/tvStart"/>
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/attendance"
+        android:visibility="gone"
+        android:paddingRight="10dp"
+        android:id="@+id/imgvwAttendance"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:src="@drawable/attendance"
+        android:visibility="gone"
+        android:padding="10dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:id="@+id/tvKm"/>
+
+    <ImageButton
+        android:id="@+id/ibCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_gravity="right"
+        android:src="@drawable/calendar_img"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/ibExpence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_gravity="right"
+        android:src="@drawable/cart_img"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:visibility="gone"/>
+
+</android.support.v7.widget.Toolbar>

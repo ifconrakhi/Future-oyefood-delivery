@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="#B3000000">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:descendantFocusability="afterDescendants">
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:background="@color/white"
+                card_view:cardCornerRadius="4dp"
+                card_view:elevation="14dp"
+                >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:weightSum="1"
+                    android:background="@color/colorPrimary">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:gravity="center|left"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:layout_gravity="center|left"
+                        android:textColor="@color/white"
+                        android:layout_weight="0.6"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/ibSave"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:layout_gravity="center|right"
+                        android:src="@android:drawable/ic_menu_save"
+                        android:layout_weight="0.2"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/ibRefresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:layout_gravity="center|right"
+                        android:src="@android:drawable/ic_menu_revert"
+                        android:layout_weight="0.2"
+                        />
+
+                </LinearLayout>
+
+                <ScrollView
+                    android:id="@+id/svContent"
+                    android:layout_below="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <RelativeLayout
+                        android:id="@+id/barContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_below="@+id/header">
+
+                        <TextView
+                            android:id="@+id/tv1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorBlack"
+                            android:text="Customer Amount"
+                            android:gravity="center|left"
+                            android:textSize="16sp"
+                            android:padding="5dp"
+                            />
+
+                        <EditText
+                            android:id="@+id/input_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv1"
+                            android:gravity="center"
+                            android:layout_margin="5dp"
+                            android:padding="10dp"
+                            android:hint="Enter Amount"
+                            android:textColor="@color/textColor"
+                            android:textColorHint="@color/caldroid_darker_gray"
+                            android:background="@drawable/buttonshape"
+                            android:imeOptions="actionDone"
+                            android:inputType="numberDecimal"
+
+                            />
+
+                        <CheckBox
+                            android:id="@+id/cbPaid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/input_amount"
+                            android:layout_marginTop="5dp"
+                            android:text="Deposit extra Amount in wallet"
+                            android:drawablePadding="10dp"
+                            android:textColor="@color/colorAccent"
+                            android:paddingLeft="5dp"
+                            android:visibility="visible"
+                            android:buttonTint="@color/colorPrimary"
+                            />
+
+                        <View
+                            android:id="@+id/v2"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/caldroid_darker_gray"
+                            android:layout_below="@+id/cbPaid"/>
+
+                        <LinearLayout
+                            android:id="@+id/clubDelCodeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/v2"
+                            android:orientation="vertical"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/input_club_code"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tv1"
+                                android:gravity="center"
+                                android:layout_margin="5dp"
+                                android:padding="10dp"
+                                android:hint="Enter Club Delivery Code"
+                                android:textColor="@color/textColor"
+                                android:textColorHint="@color/caldroid_darker_gray"
+                                android:background="@drawable/buttonshape"
+                                android:imeOptions="actionDone"
+                                android:inputType="number"
+                                />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="220dp"
+                            android:orientation="vertical"
+                            android:layout_below="@+id/v2"
+                            android:visibility="visible"
+                            android:id="@+id/llSignPic">
+
+                            <TextView
+                                android:id="@+id/tvSign"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Please Signed here.."
+                                android:layout_gravity="center|top"
+                                android:gravity="center|top"
+                                android:visibility="visible"
+                                android:textColor="@color/caldroid_gray"/>
+
+                            <com.github.gcacace.signaturepad.views.SignaturePad
+                                xmlns:android="http://schemas.android.com/apk/res/android"
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:id="@+id/signature_pad"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                app:penColor="@color/colorGreen"
+                                />
+
+                        </LinearLayout>
+
+                        <!--<View-->
+                            <!--android:id="@+id/v3"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="1dp"-->
+                            <!--android:layout_marginTop="5dp"-->
+                            <!--android:background="@color/caldroid_darker_gray"-->
+                            <!--android:layout_below="@+id/llSignPic"/>-->
+                    </RelativeLayout>
+
+                </ScrollView>
+                <LinearLayout
+                    android:layout_below="@+id/svContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <View
+                        android:id="@+id/v1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/caldroid_darker_gray"
+                        android:layout_below="@+id/svContent"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+                        <Button
+                            android:id="@+id/btnNo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:background="@null"
+                            android:text="Cancel"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorGray"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/caldroid_darker_gray"/>
+
+                    <Button
+                        android:id="@+id/btnYes"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:background="@null"
+                        android:text="Ok"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorGreen"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </FrameLayout>
+
+       <!-- <com.github.lzyzsd.circleprogress.DonutProgress
+            android:id="@+id/progressBarUpload"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            custom:donut_progress="0"
+            android:layout_centerInParent="true"
+            custom:donut_unfinished_color="@color/caldroid_darker_gray"
+            custom:donut_finished_color="@color/colorAccent"
+            android:visibility="gone"
+            custom:donut_text_size="20sp"
+            android:layout_gravity="center"
+            custom:donut_text_color="@color/colorAccent"/>
+    <TextView
+        android:id="@+id/txtPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="16dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:text="Data Uoloading..."
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_below="@+id/progressBarUpload"/>-->
+
+    </RelativeLayout>
+
+
+</FrameLayout>

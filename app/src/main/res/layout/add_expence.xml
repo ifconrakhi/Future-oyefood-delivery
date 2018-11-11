@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+
+        android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/txt1"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_orderRef"
+            android:layout_width="match_parent"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_orderRef"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textColor="@color/caldroid_black"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:imeOptions="actionNext"
+                android:hint="Enter Ref No" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_expenseDate"
+            android:layout_width="match_parent"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:layout_marginTop="5dp"
+            android:focusable="false"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_expenseDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/caldroid_black"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:imeOptions="actionNext"
+                android:focusable="false"
+                android:hint="Enter Date" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:prompt="@string/spinner_title"
+            android:spinnerMode="dropdown"
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:entries="@array/expencecategory_arrays"
+            android:id="@+id/spCategory"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:padding="5dp"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/etDesc"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/buttonshape"
+            android:textColor="@color/caldroid_black"
+            android:hint="Write Description here.."
+            android:gravity="center|top|left"
+            android:imeOptions="actionNext"
+            android:padding="5dp"
+            />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_Amount"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_Amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:lines="5"
+                android:textColor="@color/caldroid_black"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:imeOptions="actionDone"
+                android:hint="Enter Amount" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+
+            <Button
+                android:id="@+id/btTakePic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take Photo"
+                android:background="@drawable/buttonshape"
+                android:padding="5dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_weight="0.3"
+                android:layout_margin="10dp"
+                android:textColor="@color/colorAccent"/>
+            <ImageView
+                android:id="@+id/ivClick"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center|right"
+                android:layout_weight="0.7"
+                android:layout_margin="10dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/buttonshape"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttonshape"
+            android:text="Submit"
+            android:textColor="@color/colorGreen"
+            android:textSize="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+     <com.github.lzyzsd.circleprogress.DonutProgress
+           android:id="@+id/progressBarUpload"
+           android:layout_width="80dp"
+           android:layout_height="80dp"
+           custom:donut_progress="0"
+           android:layout_centerInParent="true"
+           custom:donut_unfinished_color="@color/caldroid_darker_gray"
+           custom:donut_finished_color="@color/colorGreen"
+           android:visibility="gone"
+           custom:donut_text_size="20sp"
+           android:layout_gravity="center"
+           custom:donut_text_color="@color/textColor"/>
+   <TextView
+       android:id="@+id/txtPercentage"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="15dp"
+       android:textColor="@color/textColor"
+       android:textSize="16dp"
+       android:gravity="center_horizontal"
+       android:layout_gravity="center"
+       android:layout_centerInParent="true"
+       android:text="Data Uoloading..."
+       android:textStyle="bold"
+       android:visibility="gone"
+       android:layout_below="@+id/progressBarUpload"/>
+
+</RelativeLayout>
