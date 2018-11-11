@@ -747,9 +747,9 @@ public class OrderDetail extends AppCompatActivity {
                     strRestAmt=input.getText().toString().trim();
                 }
 
-                new UploadInRouteFileToServer().execute();
+               // new UploadInRouteFileToServer().execute();
 
-               /* if(captureBill!=null&&!captureBill.isEmpty()){
+                if(captureBill!=null&&!captureBill.isEmpty()){
                     Log.d("Under_Inroute"," amt "+strRestAmt+" cbStatus "+cbStatus);
                      // new AsyncInRoute().execute();
                     // new SendInRouteData().execute();
@@ -761,7 +761,7 @@ public class OrderDetail extends AppCompatActivity {
                             Toast.makeText(OrderDetail.this,"Please Take Photo of Bill to In route the Order !!",Toast.LENGTH_LONG).show();
                         }
                     });
-                }*/
+                }
             }
         });
 
