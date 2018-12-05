@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -81,6 +82,16 @@ public class FinanceList  extends BaseDrawer  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try{
+            //android O fix bug orientation
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+        }catch (RuntimeException re){
+            re.printStackTrace();
+        }
        // setContentView(R.layout.finance_list);
         getLayoutInflater().inflate(R.layout.finance_list, frameLayout);
 

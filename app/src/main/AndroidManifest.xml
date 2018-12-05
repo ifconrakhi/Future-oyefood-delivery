@@ -76,7 +76,6 @@
 
         <activity
             android:name=".OrderList"
-            android:screenOrientation="portrait"
             android:label="@string/orderList"
             android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
@@ -87,7 +86,6 @@
     </activity>
         <activity
             android:name=".AddTransaction"
-            android:screenOrientation="portrait"
             android:label="@string/AddTransaction"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -99,11 +97,9 @@
         <activity
             android:name=".OrderDetail"
             android:label="@string/orderDetail"
-            android:screenOrientation="fullSensor"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
         <activity
             android:name=".FinanceList"
-            android:screenOrientation="portrait"
             android:label="Finance List"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -114,7 +110,6 @@
         </activity>
         <activity
             android:name=".MakeAttendance"
-            android:screenOrientation="portrait"
             android:label="Attendance"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -126,7 +121,6 @@
 
         <activity android:name=".AddExpence"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait"
             android:label="Add Expense"/>
 
         <activity
@@ -161,6 +155,7 @@
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:enabled="true"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
@@ -174,11 +169,15 @@
             </intent-filter>
         </receiver>
 
+
+
+
         <service android:name=".MyService" android:process=":my_service" />
 
         <service
             android:name="com.ifconit.oyedelivery.gcm.GCMIntentService"
-            android:exported="false" >
+            android:enabled="true"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>

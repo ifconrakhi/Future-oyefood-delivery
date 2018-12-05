@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -108,6 +109,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import im.delight.android.location.SimpleLocation;
 
+import static com.ifconit.oyedelivery.OrderList.countDownTimer;
+
 
 /**
  * Created by rakhit on 4/21/2016.
@@ -163,6 +166,16 @@ public class OrderDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try{
+            //android O fix bug orientation
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+        }catch (RuntimeException re){
+            re.printStackTrace();
+        }
         setContentView(R.layout.order_details);
 
         ActionBar ab = getSupportActionBar();
@@ -236,6 +249,10 @@ public class OrderDetail extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_RQ);
         }
 
+
+        stopVibration();
+
+
         /*if (!Utils.isGPSTurnOn(getApplicationContext())) {
             showGPSDialog();
             return;
@@ -291,6 +308,13 @@ public class OrderDetail extends AppCompatActivity {
         }*/
 
     }//close OnCreate
+
+
+    private void stopVibration() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+    }
 
     /*@Override
     public void onConnected(Bundle bundle) {

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
@@ -95,6 +97,16 @@ import im.delight.android.location.SimpleLocation;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            try{
+                //android O fix bug orientation
+                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
+
+            }catch (RuntimeException re){
+                re.printStackTrace();
+            }
             getLayoutInflater().inflate(R.layout.attendance, frameLayout);
 
             imgvwAttendance.setVisibility(View.VISIBLE);

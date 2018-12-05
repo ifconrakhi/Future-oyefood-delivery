@@ -3,7 +3,9 @@ package com.ifconit.oyedelivery;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +57,16 @@ public class AddTransaction extends BaseDrawer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try{
+            //android O fix bug orientation
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+        }catch (RuntimeException re){
+            re.printStackTrace();
+        }
       //  setContentView(R.layout.add_transaction);
         getLayoutInflater().inflate(R.layout.add_transaction, frameLayout);
     //************************************************************************************************************************************************************************************************

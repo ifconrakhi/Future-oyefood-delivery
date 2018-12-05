@@ -1,19 +1,28 @@
 package com.ifconit.oyedelivery;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.test.mock.MockPackageManager;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +33,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ifconit.oyedelivery.gcm.GCMIntentService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,7 +45,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import im.delight.android.location.SimpleLocation;
@@ -43,29 +55,43 @@ import im.delight.android.location.SimpleLocation;
 /**
  * Created by rakhit on 4/20/2016.
  */
-public class OrderList extends BaseDrawer   {
+public class OrderList extends BaseDrawer {
     ListView lvOrderList;
     ProgressDialog pDialog;
-    String code,message,result,token,userId,strBaseUrl,orderId,refNo,finalAmount,statusFlag,orderDate,locality,restName,status;
-    String expDelTime,cws;
+    String code, message, result, token, userId, strBaseUrl, orderId, refNo, finalAmount, statusFlag, orderDate, locality, restName, status;
+    String expDelTime, cws,intentFrom,gcmOrderId,gcmTitle,currentDateTime;
     SharedPreferences prefsUid;
-    public static final String PREFS_UID="loginUserId";
-    public static ArrayList<String> alOrderId,alRefNo,alStatus,alDate,alAmount,alRestName,alAddr,alExpDelTime;
+    public static final String PREFS_UID = "loginUserId";
+    public static ArrayList<String> alOrderId, alRefNo, alStatus, alDate, alAmount, alRestName, alAddr, alExpDelTime;
     CustomOrderList clAdapter;
     TextView tvNoOrder;
-    String cartStatus="2";
+    String cartStatus = "2";
     String total_distance;
-    String currentLat="",currentLng="";
+    String currentLat = "", currentLng = "";
     private static final int REQUEST_CODE_PERMISSION = 2;
     private SimpleLocation location;
     String mPermission = android.Manifest.permission.ACCESS_FINE_LOCATION;
     RequestQueue requestQueue;
-    JSONArray dataJsonArr = null,expenceJsonArr=null;
+    JSONArray dataJsonArr = null, expenceJsonArr = null;
     RelativeLayout rlProgress;
+    private int time = 0;
+    public static CountDownTimer countDownTimer;
+    Vibrator vibrator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            //android O fix bug orientation
+            if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+        } catch (RuntimeException re) {
+            re.printStackTrace();
+        }
         getLayoutInflater().inflate(R.layout.order_list, frameLayout);
 
         /*Intent mServiceIntent = new Intent(this, LocationService.class);
@@ -73,14 +99,14 @@ public class OrderList extends BaseDrawer   {
 */
         startService(new Intent(this, MyService.class));
 
-        token=GlobalClass.getToken(this);
-        strBaseUrl=getApplicationContext().getString(R.string.base_url);
-        cartStatus=getIntent().getStringExtra("cart_status");
+        token = GlobalClass.getToken(this);
+        strBaseUrl = getApplicationContext().getString(R.string.base_url);
+        cartStatus = getIntent().getStringExtra("cart_status");
 
         prefsUid = getSharedPreferences(PREFS_UID, 0);
-        userId= prefsUid.getString("uid", "");
-        tvNoOrder=(TextView) findViewById(R.id.txtvwNoOrder);
-        lvOrderList=(ListView)findViewById(R.id.lvOrderList);
+        userId = prefsUid.getString("uid", "");
+        tvNoOrder = (TextView) findViewById(R.id.txtvwNoOrder);
+        lvOrderList = (ListView) findViewById(R.id.lvOrderList);
 
         rlProgress = (RelativeLayout) findViewById(R.id.rlProgress);
 
@@ -93,12 +119,9 @@ public class OrderList extends BaseDrawer   {
         tvStop.setVisibility(View.VISIBLE);
         tvKm.setVisibility(View.VISIBLE);
 
-        if((int)Build.VERSION.SDK_INT < 23)
-        {
+        if ((int) Build.VERSION.SDK_INT < 23) {
             getLocationValue();
-        }
-        else
-        {
+        } else {
             try {
                 if (ActivityCompat.checkSelfPermission(this, mPermission)
                         != MockPackageManager.PERMISSION_GRANTED) {
@@ -107,14 +130,28 @@ public class OrderList extends BaseDrawer   {
                             new String[]{mPermission}, REQUEST_CODE_PERMISSION);
 
                     // If any permission above not allowed by user, this condition will execute every time, else your else part will work
-                }
-                else
-                {
+                } else {
                     getLocationValue();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        Bundle b=getIntent().getExtras();
+        if(b!=null){
+            try{
+                if (b.containsKey("title")){
+                    gcmTitle=b.getString("title");
+                    gcmOrderId=b.getString("order_id");
+                    GCMIntentService.vibrator.cancel();
+                    showGCMDialog();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
         }
 
       /*  if (!Utils.isGPSTurnOn(getApplicationContext())) {
@@ -181,22 +218,17 @@ public class OrderList extends BaseDrawer   {
                 if (!location.hasLocationEnabled()) {
                     // ask the user to enable location access
                     SimpleLocation.openSettings(OrderList.this);
-                }
-                else
-                {
+                } else {
                     location.beginUpdates();
                     currentLat = String.valueOf(location.getLatitude());
                     currentLng = String.valueOf(location.getLongitude());
-                    if(currentLat.equals("")||currentLng.equals(""))
-                    {
-                        Toast.makeText(getApplicationContext(),"Your Current Location Not Found!",Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                    if (currentLat.equals("") || currentLng.equals("")) {
+                        Toast.makeText(getApplicationContext(), "Your Current Location Not Found!", Toast.LENGTH_SHORT).show();
+                    } else {
                         if (Utils.isConnected(getApplicationContext())) {
                             new StartServiceAsync().execute();
-                        }else{
-                            Toast.makeText(getApplicationContext(),"No internet connection available!!",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -212,22 +244,17 @@ public class OrderList extends BaseDrawer   {
                 if (!location.hasLocationEnabled()) {
                     // ask the user to enable location access
                     SimpleLocation.openSettings(OrderList.this);
-                }
-                else
-                {
+                } else {
                     location.beginUpdates();
                     currentLat = String.valueOf(location.getLatitude());
                     currentLng = String.valueOf(location.getLongitude());
-                    if(currentLat.equals("")||currentLng.equals(""))
-                    {
-                        Toast.makeText(getApplicationContext(),"Your Current Location Not Found!",Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                    if (currentLat.equals("") || currentLng.equals("")) {
+                        Toast.makeText(getApplicationContext(), "Your Current Location Not Found!", Toast.LENGTH_SHORT).show();
+                    } else {
                         if (Utils.isConnected(getApplicationContext())) {
                             new StopService().execute();
-                        }else{
-                            Toast.makeText(getApplicationContext(),"No internet connection available!!",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -240,17 +267,287 @@ public class OrderList extends BaseDrawer   {
                 Intent i = new Intent(getApplicationContext(), OrderDetail.class);
                 i.putExtra("orderId", alOrderId.get(position));
                 startActivity(i);
-               // finish();
+                // finish();
             }
         });
-        Log.d("StartService","OnCreate status "+cartStatus);
+        Log.d("StartService", "OnCreate status " + cartStatus);
         if (Utils.isConnected(getApplicationContext())) {
-           // new AsyncOrderList().execute();
+            // new AsyncOrderList().execute();
             getOrderList();
-        }else{
-            Toast.makeText(getApplicationContext(),"No internet connection available!!",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
         }
+
+     //   startVibration();
+
     }//close onCreate
+
+
+    public void showGCMDialog(){
+        try {
+            final Dialog f = new Dialog(OrderList.this);
+            f.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            f.setContentView(R.layout.custome_change_cart);
+            f.setCancelable(false);
+            TextView textView = (TextView) f.findViewById(R.id.textChange);
+            Button btnYes = (Button) f.findViewById(R.id.btnYes);
+            Button btnNo = (Button) f.findViewById(R.id.btnNo);
+
+            textView.setText("" + gcmTitle);
+            btnYes.setText("OK");
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    f.dismiss();
+                    getAcknowledgement();
+                }
+            });
+            btnNo.setVisibility(View.GONE);
+            btnYes.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+            f.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void getAcknowledgement(){
+        try{
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            currentDateTime = sdf1.format(new Date());
+            String yourJsonStringUrl = strBaseUrl+"add_order_acknowledge&token="+token+"&order_id="+gcmOrderId+"&del_boy_id="+userId+"&orderacknowle="+currentDateTime;// set your json string url here
+            rlProgress.setVisibility(View.VISIBLE);
+
+            yourJsonStringUrl=yourJsonStringUrl.replaceAll(" ","%20");
+            Log.d("JSONURL",""+yourJsonStringUrl);
+
+            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(yourJsonStringUrl, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject json) {
+                    //loading.dismiss();
+                    requestQueue.cancelAll("yourJsonStringUrl");
+                    try {
+                        code=json.getString("code");
+
+                    // Log.d(TAG, "code: " + code);
+                    message=json.getString("message");
+                    // Log.d(TAG,"message: "+message);
+                    if (code.equalsIgnoreCase("200")) {
+                        rlProgress.setVisibility(View.GONE);
+                        Toast.makeText(OrderList.this, message, Toast.LENGTH_SHORT).show();
+
+                    }else if (code.equalsIgnoreCase("501")) {
+
+                        try {
+                            String createTokenUrl = getApplicationContext().getString(R.string.create_token_url);
+                            cws = new CallWebService(OrderList.this,createTokenUrl).execute().get();
+                            Log.d("Login","Token_URL:  "+cws);
+                            JSONObject jo = new JSONObject(cws);
+                            String c = jo.getString("code");
+                            if (c.equals("200")) {
+                                token = jo.getString("token");
+                                GlobalClass.putToken(token, OrderList.this);
+                                // new AsyncOrderDetail().execute();
+                                getAcknowledgement();
+                            }
+                        }catch (ExecutionException | InterruptedException ei){
+                            ei.printStackTrace();
+                            // new AsyncOrderDetail().execute();
+                            getAcknowledgement();
+                        }catch (JSONException je){
+                            je.printStackTrace();
+                            //  new AsyncOrderDetail().execute();
+                            getAcknowledgement();
+                        }catch (NullPointerException ne){
+                            //  new AsyncOrderDetail().execute();
+                            getAcknowledgement();
+                        }
+                    } else {
+                        rlProgress.setVisibility(View.GONE);
+                        Toast.makeText(OrderList.this, message, Toast.LENGTH_SHORT).show();
+                       // tvNoOrder.setVisibility(View.VISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            },
+                    new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //Log.d("onError", " network error");
+                            requestQueue.cancelAll("yourJsonStringUrl");
+                            rlProgress.setVisibility(View.GONE);
+
+                        }
+                    }
+            );
+            jsonObjectRequest1.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonObjectRequest1.setShouldCache(false);
+            jsonObjectRequest1.setTag("yourJsonStringUrl");
+            requestQueue.add(jsonObjectRequest1);
+            requestQueue.getCache().remove(yourJsonStringUrl);
+            requestQueue.getCache().clear();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void startVibration() {
+       /* time = (int) System.currentTimeMillis();
+
+        countDownTimer = new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+
+                time = (int) (millisUntilFinished / 1000);
+                int[] timeLapse = {58, 55, 52, 49, 46, 43, 40, 37, 34, 31, 28, 25, 22, 19, 16, 13, 10, 7, 4, 1};
+                for (int k = 0; k < timeLapse.length; k++) {
+                    if (time == timeLapse[k]) {
+                        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(1000);
+                    }
+                }
+            }
+
+            public void onFinish() {
+            }
+        }.start();*/
+
+       try{
+           vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+
+
+           if (vibrator != null && vibrator.hasVibrator()) {
+
+
+
+              // vibrateFor500ms();
+
+
+
+               customVibratePatternNoRepeat();
+
+
+
+             // customVibratePatternRepeatFromSpecificIndex();
+
+
+
+             /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                   createOneShotVibrationUsingVibrationEffect();
+
+                   createWaveFormVibrationUsingVibrationEffect();
+
+                   createWaveFormVibrationUsingVibrationEffectAndAmplitude();
+
+               }*/
+
+
+
+           } else {
+
+               Toast.makeText(this, "Device does not support vibration", Toast.LENGTH_SHORT).show();
+
+           }
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+
+
+
+    }
+    private void vibrateFor500ms() {
+
+        vibrator.vibrate(1*60*1000); // for 1 minute
+
+    }
+    private void customVibratePatternNoRepeat() {
+
+
+
+        // 0 : Start without a delay
+
+        // 400 : Vibrate for 400 milliseconds
+
+        // 200 : Pause for 200 milliseconds
+
+        // 400 : Vibrate for 400 milliseconds
+
+        long[] mVibratePattern = new long[]{0, 400, 200, 400};
+
+
+
+        // -1 : Do not repeat this pattern
+
+        // pass 0 if you want to repeat this pattern from 0th index
+
+        vibrator.vibrate(mVibratePattern, -1);
+
+    }
+    private void customVibratePatternRepeatFromSpecificIndex() {
+
+        long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
+
+
+
+        // 3 : Repeat this pattern from 3rd element of an array
+
+        vibrator.vibrate(mVibratePattern, 3);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createOneShotVibrationUsingVibrationEffect() {
+
+        // 1000 : Vibrate for 1 sec
+
+        // VibrationEffect.DEFAULT_AMPLITUDE - would perform vibration at full strength
+
+        VibrationEffect effect = VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE);
+
+        vibrator.vibrate(effect);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createWaveFormVibrationUsingVibrationEffect() {
+
+        long[] mVibratePattern = new long[]{0, 400, 1000, 600, 1000, 800, 1000, 1000};
+
+        // -1 : Play exactly once
+
+        VibrationEffect effect = VibrationEffect.createWaveform(mVibratePattern, -1);
+
+        vibrator.vibrate(effect);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createWaveFormVibrationUsingVibrationEffectAndAmplitude() {
+
+
+
+        long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
+
+        int[] mAmplitudes = new int[]{0, 255, 0, 255, 0, 255, 0, 255};
+
+        // -1 : Play exactly once
+
+
+
+        if (vibrator.hasAmplitudeControl()) {
+
+            VibrationEffect effect = VibrationEffect.createWaveform(mVibratePattern, mAmplitudes, -1);
+
+            vibrator.vibrate(effect);
+
+        }
+
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
