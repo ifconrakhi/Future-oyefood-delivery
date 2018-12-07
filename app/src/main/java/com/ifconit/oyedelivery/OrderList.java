@@ -299,8 +299,8 @@ public class OrderList extends BaseDrawer {
                     try {
                         f.dismiss();
                         GCMIntentService.vibrator.cancel();
-                        GCMIntentService.ringtoneSound.stop();
-                        getAcknowledgement();
+                        GCMIntentService.mMediaPlayer.stop();
+                      //  getAcknowledgement();
                     }catch (Exception e){
                         e.printStackTrace();
                     }

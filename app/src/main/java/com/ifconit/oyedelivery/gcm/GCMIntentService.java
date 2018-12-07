@@ -7,8 +7,13 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -34,6 +39,7 @@ public class GCMIntentService extends GcmListenerService {
 	private static final String TAG = "GCMIntentService";
     public static Vibrator vibrator;
     public static Ringtone ringtoneSound;
+    public static MediaPlayer mMediaPlayer;
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
@@ -77,28 +83,76 @@ public class GCMIntentService extends GcmListenerService {
 
             int notificationId = 1;
             final String channelId = "channel-01";
-            String channelName = "OyeFoodDelivery";
+            String channelName = getApplicationContext().getString(R.string.app_name);
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationChannel mChannel = new NotificationChannel(
-                        channelId, channelName, importance);
+
+            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                AudioAttributes attributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .build();
+
+                NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
+                mChannel.enableLights(true);
+                mChannel.enableVibration(true);
+                mChannel.setSound(sound, attributes); // This is IMPORTANT
+
                 notificationManager.createNotificationChannel(mChannel);
             }
 
+            long[] mVibratePattern = {0, 900, 100, 800, 200, 700, 300, 600, 400, 500, 500, 400, 600, 300, 700, 200, 800, 100, 900,};
+            // play vibration
+            vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createWaveform(mVibratePattern, 0));
+            }else{
+                vibrator.vibrate(mVibratePattern,1);
+            }
 
 
-            startVibration();
-            final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+           /* Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_ALARM);
+            ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+
+            if (ringtoneSound != null) {
+                ringtoneSound.play();
+             }*/
+
+            AudioManager mobilemode = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            mobilemode.setStreamVolume(AudioManager.STREAM_ALARM,mobilemode.getStreamMaxVolume(AudioManager.STREAM_ALARM),0);
+            mobilemode.setStreamVolume(AudioManager.STREAM_NOTIFICATION,mobilemode.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION),0);
+            mobilemode.setStreamVolume(AudioManager.STREAM_RING,mobilemode.getStreamMaxVolume(AudioManager.STREAM_RING),0);
+
+            try {
+                //Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_RINGTONE);
+               // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
+                mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
+
+                // mMediaPlayer.setDataSource(this, sound);
+              //  final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (mobilemode.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+
+            //startVibration();
+            //  final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             //fetch current Ringtone
-          /*  final Uri defaultSoundUri = RingtoneManager.getActualDefaultRingtoneUri(this
-                    .getApplicationContext(), RingtoneManager.TYPE_RINGTONE);*/
+            final Uri defaultSoundUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
 
             final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("" + name)
                     .setContentText(title)
                     .setAutoCancel(true)
+                    .setLights(Color.RED, 3000, 3000)
                     .setSound(defaultSoundUri);
 
 
@@ -228,15 +282,35 @@ public class GCMIntentService extends GcmListenerService {
     }
     private void customVibratePatternRepeatFromSpecificIndex() {
 
-        long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
+       // long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
         // 3 : Repeat this pattern from 3rd element of an array
-
+        long[] mVibratePattern = {
+                0,     // start vibrate immediately
+                900,   // vibrate 1 900 ms
+                100,   // silence 1 100 ms
+                800,   // vibrate 2 800 ms
+                200,   // silence 2 200 ms
+                700,
+                300,
+                600,
+                400,
+                500,
+                500,
+                400,
+                600,
+                300,
+                700,
+                200,
+                800,
+                100,
+                900,
+        };
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(2*60*1000, VibrationEffect.DEFAULT_AMPLITUDE));
 
             // vibrator.vibrate(mVibratePattern, 3);
         } else{
-            vibrator.vibrate(mVibratePattern, 3);
+            vibrator.vibrate(mVibratePattern, 0);
         }
 
         Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
