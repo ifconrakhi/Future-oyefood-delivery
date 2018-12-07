@@ -22,6 +22,7 @@
     <string name="deliveredOrders">Delivered Orders</string>
     <string name="inRouteOrders">In-Route Orders</string>
     <string name="pending_count">All Pending Orders</string>
+    <string name="logout">Log-out</string>
 
     //==============================Text value================================================
     <string name="amountToReceive">Amount to Receive</string>

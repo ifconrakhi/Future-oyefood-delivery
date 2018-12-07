@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -115,9 +118,9 @@ public class OrderList extends BaseDrawer {
 
         tvNoOrder.setVisibility(View.GONE);
         imgvwAttendance.setVisibility(View.GONE);
-        tvStart.setVisibility(View.VISIBLE);
-        tvStop.setVisibility(View.VISIBLE);
-        tvKm.setVisibility(View.VISIBLE);
+       // tvStart.setVisibility(View.VISIBLE);
+       // tvStop.setVisibility(View.VISIBLE);
+       // tvKm.setVisibility(View.VISIBLE);
 
         if ((int) Build.VERSION.SDK_INT < 23) {
             getLocationValue();
@@ -144,7 +147,7 @@ public class OrderList extends BaseDrawer {
                 if (b.containsKey("title")){
                     gcmTitle=b.getString("title");
                     gcmOrderId=b.getString("order_id");
-                    GCMIntentService.vibrator.cancel();
+
                     showGCMDialog();
                 }
             }catch (Exception e){
@@ -271,14 +274,9 @@ public class OrderList extends BaseDrawer {
             }
         });
         Log.d("StartService", "OnCreate status " + cartStatus);
-        if (Utils.isConnected(getApplicationContext())) {
-            // new AsyncOrderList().execute();
-            getOrderList();
-        } else {
-            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
-        }
 
-     //   startVibration();
+
+      //  startVibration();
 
     }//close onCreate
 
@@ -298,8 +296,14 @@ public class OrderList extends BaseDrawer {
             btnYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    f.dismiss();
-                    getAcknowledgement();
+                    try {
+                        f.dismiss();
+                        GCMIntentService.vibrator.cancel();
+                        GCMIntentService.ringtoneSound.stop();
+                        getAcknowledgement();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
             btnNo.setVisibility(View.GONE);
@@ -335,6 +339,12 @@ public class OrderList extends BaseDrawer {
                     if (code.equalsIgnoreCase("200")) {
                         rlProgress.setVisibility(View.GONE);
                         Toast.makeText(OrderList.this, message, Toast.LENGTH_SHORT).show();
+                        if (Utils.isConnected(getApplicationContext())) {
+                            // new AsyncOrderList().execute();
+                            getOrderList();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
+                        }
 
                     }else if (code.equalsIgnoreCase("501")) {
 
@@ -398,43 +408,16 @@ public class OrderList extends BaseDrawer {
     }
 
     private void startVibration() {
-       /* time = (int) System.currentTimeMillis();
 
-        countDownTimer = new CountDownTimer(60000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-
-                time = (int) (millisUntilFinished / 1000);
-                int[] timeLapse = {58, 55, 52, 49, 46, 43, 40, 37, 34, 31, 28, 25, 22, 19, 16, 13, 10, 7, 4, 1};
-                for (int k = 0; k < timeLapse.length; k++) {
-                    if (time == timeLapse[k]) {
-                        ((Vibrator) getSystemService(VIBRATOR_SERVICE)).vibrate(1000);
-                    }
-                }
-            }
-
-            public void onFinish() {
-            }
-        }.start();*/
 
        try{
            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-
-
            if (vibrator != null && vibrator.hasVibrator()) {
 
-
-
-              // vibrateFor500ms();
-
-
-
-               customVibratePatternNoRepeat();
-
-
-
-             // customVibratePatternRepeatFromSpecificIndex();
+             //  vibrateFor500ms();
+             //  customVibratePatternNoRepeat();
+              customVibratePatternRepeatFromSpecificIndex();
 
 
 
@@ -464,7 +447,18 @@ public class OrderList extends BaseDrawer {
     }
     private void vibrateFor500ms() {
 
-        vibrator.vibrate(1*60*1000); // for 1 minute
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(1*60*1000, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else{
+            vibrator.vibrate(1*60*1000); // for 1 minute
+        }
+
+        Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Ringtone ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+
+        if (ringtoneSound != null) {
+            ringtoneSound.play();
+        }
 
     }
     private void customVibratePatternNoRepeat() {
@@ -493,12 +487,23 @@ public class OrderList extends BaseDrawer {
     private void customVibratePatternRepeatFromSpecificIndex() {
 
         long[] mVibratePattern = new long[]{0, 400, 800, 600, 800, 800, 800, 1000};
-
-
-
         // 3 : Repeat this pattern from 3rd element of an array
 
-        vibrator.vibrate(mVibratePattern, 3);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(2*60*1000, VibrationEffect.DEFAULT_AMPLITUDE));
+
+           // vibrator.vibrate(mVibratePattern, 3);
+        } else{
+            vibrator.vibrate(mVibratePattern, 3);
+        }
+
+        Uri ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Ringtone ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+
+        if (ringtoneSound != null) {
+            ringtoneSound.play();
+        }
+
 
     }
     @RequiresApi(api = Build.VERSION_CODES.O)

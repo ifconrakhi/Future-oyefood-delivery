@@ -15,7 +15,6 @@
         android:contentDescription="@string/app_name"
         android:background="@null"
         android:textSize="30dp"
-
         android:layout_alignParentLeft="true"
 
         />

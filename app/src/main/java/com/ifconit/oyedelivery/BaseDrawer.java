@@ -1,5 +1,6 @@
 package com.ifconit.oyedelivery;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +60,7 @@ public class BaseDrawer extends AppCompatActivity  {
     ProgressDialog pDialog;
     TextView tvStart;
     SharedPreferences prefsUid;
+    SharedPreferences.Editor editor;
     public static final String PREFS_UID="loginUserId";
     String userId,token,cws,confirm_count,deliver_count,all_pending_count;
     String currentLat="",currentLng="";
@@ -112,6 +117,7 @@ public class BaseDrawer extends AppCompatActivity  {
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withDrawer(result)
+                .withHeaderBackground(R.drawable.header)
                 .withSavedInstance(savedInstanceState)
                 .build();
     }
@@ -220,11 +226,12 @@ public class BaseDrawer extends AppCompatActivity  {
                         .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                         .addDrawerItems(
                                 new PrimaryDrawerItem().withName(R.string.confirmedOrders).withIdentifier(1).withBadge(confirm_count),
-                                new PrimaryDrawerItem().withName(R.string.deliveredOrders).withIdentifier(2).withBadge(deliver_count),
-                                new PrimaryDrawerItem().withName(R.string.pending_count).withIdentifier(3).withBadge(all_pending_count).withEnabled(false),
-                                new PrimaryDrawerItem().withName(R.string.addTransaction).withIdentifier(4),
+                               // new PrimaryDrawerItem().withName(R.string.deliveredOrders).withIdentifier(2).withBadge(deliver_count),
+                               // new PrimaryDrawerItem().withName(R.string.pending_count).withIdentifier(3).withBadge(all_pending_count).withEnabled(false),
+                               // new PrimaryDrawerItem().withName(R.string.addTransaction).withIdentifier(4),
                                 new PrimaryDrawerItem().withName(R.string.listFinances).withIdentifier(5),
-                                new PrimaryDrawerItem().withName(R.string.attendance).withIdentifier(6)
+                               // new PrimaryDrawerItem().withName(R.string.attendance).withIdentifier(6)
+                                new PrimaryDrawerItem().withName(R.string.logout).withIdentifier(7)
 
                         ) // add the items we want to use with our Drawer
                         .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -241,7 +248,8 @@ public class BaseDrawer extends AppCompatActivity  {
                                             overridePendingTransition(0,0);
                                             //finish();
                                             //finish();
-                                        } else if (drawerItem != null && drawerItem.getIdentifier() == 2) {
+                                        }
+                                        /*else if (drawerItem != null && drawerItem.getIdentifier() == 2) {
                                             Intent gotoCategoryList = new Intent(BaseDrawer.this, OrderList.class);
                                             gotoCategoryList.putExtra("cart_status","3");
                                             gotoCategoryList.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -257,7 +265,7 @@ public class BaseDrawer extends AppCompatActivity  {
                                             startActivity(gotoCategoryList);
                                             overridePendingTransition(0,0);
                                            // finish();
-                                        }
+                                        }*/
                                         else if(drawerItem != null && drawerItem.getIdentifier() == 5){
                                             Intent gotoCategoryList = new Intent(BaseDrawer.this, FinanceList.class);
                                             gotoCategoryList.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -265,16 +273,21 @@ public class BaseDrawer extends AppCompatActivity  {
                                             overridePendingTransition(0,0);
                                            // finish();
                                         }
-                                        else if(drawerItem != null && drawerItem.getIdentifier() == 6){
+                                       /* else if(drawerItem != null && drawerItem.getIdentifier() == 6){
                                             Intent gotoCategoryList = new Intent(BaseDrawer.this, MakeAttendance.class);
                                             gotoCategoryList.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                             startActivity(gotoCategoryList);
                                             overridePendingTransition(0,0);
                                            // finish();
-                                        }else if(drawerItem != null && drawerItem.getIdentifier() == 3){
+                                        }*/
+                                       /* else if(drawerItem != null && drawerItem.getIdentifier() == 3){
                                            Intent intent = new Intent(BaseDrawer.this, null);
                                            startActivity(intent);
                                            // result.openDrawer();
+                                        }*/
+                                        else if(drawerItem != null && drawerItem.getIdentifier() == 7){
+                                          showLogoutDialog();
+                                            // result.openDrawer();
                                         }
                                       }
                                     if (drawerItem instanceof Badgeable) {
@@ -356,6 +369,51 @@ public class BaseDrawer extends AppCompatActivity  {
 //*****************************************************************************************************************
 
 //**************************************************************************************************************
+
+    public void showLogoutDialog(){
+        try {
+            final Dialog f = new Dialog(BaseDrawer.this);
+            f.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            f.setContentView(R.layout.custome_change_cart);
+            f.setCancelable(false);
+            TextView barTitle=(TextView)f.findViewById(R.id.barTitle);
+            TextView textView = (TextView) f.findViewById(R.id.textChange);
+            Button btnYes = (Button) f.findViewById(R.id.btnYes);
+            Button btnNo = (Button) f.findViewById(R.id.btnNo);
+
+            barTitle.setText("Log-Out");
+            textView.setText("  Do you want to Log Out?");
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    f.dismiss();
+                    editor = prefsUid.edit();
+                    editor.putString("uid", "");
+                    editor.commit();
+                    Intent i = new Intent(BaseDrawer.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    startActivity(i);
+                    overridePendingTransition(0, 0);
+                    finish();
+
+
+                }
+            });
+           btnNo.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   f.dismiss();
+               }
+           });
+
+
+            f.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onPause(){
         super.onPause();
