@@ -300,7 +300,7 @@ public class OrderList extends BaseDrawer {
                         f.dismiss();
                         GCMIntentService.vibrator.cancel();
                         GCMIntentService.mMediaPlayer.stop();
-                      //  getAcknowledgement();
+                        getAcknowledgement();
                     }catch (Exception e){
                         e.printStackTrace();
                     }

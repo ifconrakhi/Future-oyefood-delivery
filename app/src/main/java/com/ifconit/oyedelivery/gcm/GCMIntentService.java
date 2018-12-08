@@ -68,39 +68,59 @@ public class GCMIntentService extends GcmListenerService {
             final String order_id = json.getString("order_id");
            // String order_refno = json.getString("order_refno");
 
-            //long when = System.currentTimeMillis();
+            Intent intent1 = new Intent(getApplicationContext(), OrderList.class);
+            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.putExtra("order_id",order_id);
+            intent1.putExtra("title",title);
+            intent1.setAction(String.valueOf(System.currentTimeMillis()));
+            PendingIntent pendingIntent1 = PendingIntent.getActivity(getApplicationContext(), 0 /* Request code */, intent1, PendingIntent.FLAG_ONE_SHOT);
 
-            /*Intent intent = new Intent(this, NotificationReceiverActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(String.valueOf(System.currentTimeMillis()));
-            intent.putExtra("action","Accept");
-            intent.putExtra("action","Reject");
-            intent.putExtra("order_id",order_id);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-*/
-           // PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
             final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
             int notificationId = 1;
             final String channelId = "channel-01";
             String channelName = getApplicationContext().getString(R.string.app_name);
             int importance = NotificationManager.IMPORTANCE_HIGH;
 
 
-            Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+           // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
 
-                AudioAttributes attributes = new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .build();
+            Uri soundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);
 
-                NotificationChannel mChannel = new NotificationChannel(channelId, channelName, importance);
-                mChannel.enableLights(true);
-                mChannel.enableVibration(true);
-                mChannel.setSound(sound, attributes); // This is IMPORTANT
+            final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("" + name)
+                    .setContentText(title)
+                    .setAutoCancel(true)
+                    .setLights(Color.RED, 3000, 3000)
+                    .setSound(soundUri)
+                    .setContentIntent(pendingIntent1);
 
-                notificationManager.createNotificationChannel(mChannel);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                if(soundUri != null){
+                    // Changing Default mode of notification
+                    notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+                    // Creating an Audio Attribute
+                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .build();
+
+                    // Creating Channel
+                    NotificationChannel notificationChannel = new NotificationChannel(channelId,channelName,NotificationManager.IMPORTANCE_HIGH);
+                    notificationChannel.enableLights(true);
+                    notificationChannel.enableVibration(true);
+                    notificationChannel.setSound(soundUri,audioAttributes);
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
             }
+
+            Notification notification = notificationBuilder.build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_SHOW_LIGHTS;
+            notificationManager.notify(0, notification);
+
+
 
             long[] mVibratePattern = {0, 900, 100, 800, 200, 700, 300, 600, 400, 500, 500, 400, 600, 300, 700, 200, 800, 100, 900,};
             // play vibration
@@ -127,9 +147,9 @@ public class GCMIntentService extends GcmListenerService {
             try {
                 //Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_RINGTONE);
                // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
-                mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
-
-                // mMediaPlayer.setDataSource(this, sound);
+              //  mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
+                 mMediaPlayer=new MediaPlayer();
+                 mMediaPlayer.setDataSource(this, soundUri);
               //  final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 if (mobilemode.getStreamVolume(AudioManager.STREAM_RING) != 0) {
                     mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
@@ -143,33 +163,9 @@ public class GCMIntentService extends GcmListenerService {
 
 
             //startVibration();
-            //  final Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            //fetch current Ringtone
-            final Uri defaultSoundUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(), RingtoneManager.TYPE_RINGTONE);
-
-            final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("" + name)
-                    .setContentText(title)
-                    .setAutoCancel(true)
-                    .setLights(Color.RED, 3000, 3000)
-                    .setSound(defaultSoundUri);
 
 
-            Intent intent1 = new Intent(getApplicationContext(), OrderList.class);
-            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent1.putExtra("order_id",order_id);
-            intent1.putExtra("title",title);
-            intent1.setAction(String.valueOf(System.currentTimeMillis()));
-            PendingIntent pendingIntent1 = PendingIntent.getActivity(getApplicationContext(), 0 /* Request code */, intent1, PendingIntent.FLAG_ONE_SHOT);
-            notificationBuilder.setContentIntent(pendingIntent1);
-            // notificationBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
-            notificationBuilder.setSound(defaultSoundUri);
-            // NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            Notification notification = notificationBuilder.build();
-            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_SHOW_LIGHTS;
-            notificationManager.notify(0, notification);
 
 
 
@@ -195,11 +191,6 @@ public class GCMIntentService extends GcmListenerService {
                 e.printStackTrace();
             }*/
 
-
-
-
-
-           // notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
 
         } catch (JSONException e) {
