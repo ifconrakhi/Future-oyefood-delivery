@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.ifconit.oyedelivery.LoginActivity;
 import com.ifconit.oyedelivery.NotificationReceiverActivity;
+import com.ifconit.oyedelivery.NotifyService;
 import com.ifconit.oyedelivery.OrderList;
 import com.ifconit.oyedelivery.R;
 import com.ifconit.oyedelivery.SplashActivity;
@@ -57,17 +58,27 @@ public class GCMIntentService extends GcmListenerService {
     }
 
     private void sendNotification(String message) {
-
-
-        final String name = getApplicationContext().getString(R.string.app_name);
-
-
         try{
+
+            createNotification(message);
+            callActivityDirect(message);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void createNotification(String message){
+        try{
+            final String name = getApplicationContext().getString(R.string.app_name);
+
+
             JSONObject json = new JSONObject(message);
             final String title = json.getString("alert");
-           // Log.e("GCMNotificationReceiver", ""+title);
+            // Log.e("GCMNotificationReceiver", ""+title);
             final String order_id = json.getString("order_id");
-           // String order_refno = json.getString("order_refno");
+            // String order_refno = json.getString("order_refno");
 
             final int NOTIFY_ID = 0; // ID of notification
             String channelId = getApplicationContext().getString(R.string.default_notification_channel_id); // default_channel_id
@@ -107,8 +118,6 @@ public class GCMIntentService extends GcmListenerService {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("order_id",order_id);
                 intent.putExtra("title",title);
-                intent.setAction(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 
@@ -132,8 +141,6 @@ public class GCMIntentService extends GcmListenerService {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("order_id",order_id);
                 intent.putExtra("title",title);
-                intent.setAction(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                 builder.setContentTitle("" + name)                            // required
@@ -177,11 +184,11 @@ public class GCMIntentService extends GcmListenerService {
 
             try {
                 //Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_RINGTONE);
-               // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
-              //  mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
-                 mMediaPlayer=new MediaPlayer();
-                 mMediaPlayer.setDataSource(this, soundUri);
-              //  final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
+                //  mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
+                mMediaPlayer=new MediaPlayer();
+                mMediaPlayer.setDataSource(this, soundUri);
+                //  final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 if (mobilemode.getStreamVolume(AudioManager.STREAM_RING) != 0) {
                     mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
                     mMediaPlayer.setLooping(true);
@@ -195,6 +202,7 @@ public class GCMIntentService extends GcmListenerService {
 
             //startVibration();
 
+
         } catch (JSONException e) {
             Log.d("NotificationReceiver", "JSONException: " + e.getMessage());
         }catch (NumberFormatException ex){
@@ -204,7 +212,25 @@ public class GCMIntentService extends GcmListenerService {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    public void callActivityDirect(String message){
+        try{
+
+            JSONObject json = new JSONObject(message);
+            final String title = json.getString("alert");
+            // Log.e("GCMNotificationReceiver", ""+title);
+            final String order_id = json.getString("order_id");
+
+            Intent intent = new Intent(GCMIntentService.this, NotifyService.class);
+            intent.putExtra("order_id",order_id);
+            intent.putExtra("title",title);
+            startService(intent);
+
+
+        }catch (Exception e){
+          e.printStackTrace();
+        }
     }
 
 

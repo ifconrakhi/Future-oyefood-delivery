@@ -171,7 +171,10 @@
         </receiver>
 
 
-
+        <service
+            android:name="com.ifconit.oyedelivery.NotifyService"
+            android:enabled="true" >
+        </service>
 
         <service android:name=".MyService" android:process=":my_service" />
 
