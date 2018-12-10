@@ -40,6 +40,7 @@ public class GCMIntentService extends GcmListenerService {
     public static Vibrator vibrator;
     public static Ringtone ringtoneSound;
     public static MediaPlayer mMediaPlayer;
+     NotificationManager notificationManager;
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
@@ -68,57 +69,87 @@ public class GCMIntentService extends GcmListenerService {
             final String order_id = json.getString("order_id");
            // String order_refno = json.getString("order_refno");
 
-            Intent intent1 = new Intent(getApplicationContext(), OrderList.class);
-            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent1.putExtra("order_id",order_id);
-            intent1.putExtra("title",title);
-            intent1.setAction(String.valueOf(System.currentTimeMillis()));
-            PendingIntent pendingIntent1 = PendingIntent.getActivity(getApplicationContext(), 0 /* Request code */, intent1, PendingIntent.FLAG_ONE_SHOT);
+            final int NOTIFY_ID = 0; // ID of notification
+            String channelId = getApplicationContext().getString(R.string.default_notification_channel_id); // default_channel_id
+            String channelName = getApplicationContext().getString(R.string.default_notification_channel_title); // Default Channel
+            Intent intent;
+            PendingIntent pendingIntent;
+            NotificationCompat.Builder builder;
 
-            final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            int notificationId = 1;
-            final String channelId = "channel-01";
-            String channelName = getApplicationContext().getString(R.string.app_name);
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-
-
-           // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
+            if (notificationManager == null) {
+                notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            }
 
             Uri soundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);
 
-            final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("" + name)
-                    .setContentText(title)
-                    .setAutoCancel(true)
-                    .setLights(Color.RED, 3000, 3000)
-                    .setSound(soundUri)
-                    .setContentIntent(pendingIntent1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
+                Log.d(TAG,"under_sendnotif if ");
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = notificationManager.getNotificationChannel(channelId);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
 
-                if(soundUri != null){
-                    // Changing Default mode of notification
-                    notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-                    // Creating an Audio Attribute
-                    AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .build();
-
-                    // Creating Channel
-                    NotificationChannel notificationChannel = new NotificationChannel(channelId,channelName,NotificationManager.IMPORTANCE_HIGH);
-                    notificationChannel.enableLights(true);
-                    notificationChannel.enableVibration(true);
-                    notificationChannel.setSound(soundUri,audioAttributes);
-                    notificationManager.createNotificationChannel(notificationChannel);
+                if (mChannel == null) {
+                    mChannel = new NotificationChannel(channelId, channelName, importance);
+                    mChannel.enableVibration(true);
+                    mChannel.setSound(soundUri,audioAttributes);
+                    mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                    notificationManager.createNotificationChannel(mChannel);
                 }
-            }
+                builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
 
-            Notification notification = notificationBuilder.build();
-            notification.flags = Notification.FLAG_AUTO_CANCEL | Notification.FLAG_SHOW_LIGHTS;
-            notificationManager.notify(0, notification);
+                intent = new Intent(getApplicationContext(), OrderList.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("order_id",order_id);
+                intent.putExtra("title",title);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+                builder.setContentTitle("" + name)                            // required
+                        .setSmallIcon(R.mipmap.ic_launcher)   // required
+                        .setContentText(title) // required
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker("" + name)
+                        .setSound(soundUri)
+                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            }
+            else {
+
+                Log.d(TAG,"under_sendnotif else ");
+
+                builder = new NotificationCompat.Builder(getApplicationContext(), channelId);
+                intent = new Intent(getApplicationContext(), OrderList.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("order_id",order_id);
+                intent.putExtra("title",title);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+                builder.setContentTitle("" + name)                            // required
+                        .setSmallIcon(R.mipmap.ic_launcher)   // required
+                        .setContentText(title) // required
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker("" + name)
+                        .setSound(soundUri)
+                        .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                        .setPriority(Notification.PRIORITY_HIGH);
+            }
+            Notification notification = builder.build();
+            notificationManager.notify(NOTIFY_ID, notification);
+
 
 
 
@@ -163,35 +194,6 @@ public class GCMIntentService extends GcmListenerService {
 
 
             //startVibration();
-
-
-
-
-
-
-
-           /* try{
-
-                Thread timerThread = new Thread(){
-                    public void run(){
-                        try{
-                            sleep(100);
-                        }catch(InterruptedException e){
-                            e.printStackTrace();
-                        }finally{
-
-
-
-                        }
-                    }
-                };
-                timerThread.start();
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }*/
-
-
 
         } catch (JSONException e) {
             Log.d("NotificationReceiver", "JSONException: " + e.getMessage());

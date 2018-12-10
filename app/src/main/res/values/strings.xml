@@ -8,6 +8,9 @@
     <string name="listFinance">List Finance</string>
 
     <string name="gcm_defaultSenderId">45776743402</string>
+    <string name="default_notification_channel_title">OyeDelivery</string>
+    <string name="default_notification_channel_id" translatable="false">channel_oyedelivery_01</string>
+
     //=================================Value for Login=====================================
     <string name="signIn">Sign-In</string>
     <string name="newUser">New user register here</string>
