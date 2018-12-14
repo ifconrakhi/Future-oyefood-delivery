@@ -95,7 +95,7 @@ public class AddExpence extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_expence);
 
-        try{
+      /*  try{
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -103,7 +103,7 @@ public class AddExpence extends AppCompatActivity{
 
         }catch (RuntimeException re){
             re.printStackTrace();
-        }
+        }*/
 
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);

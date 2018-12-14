@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,7 +25,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.ifconit.oyedelivery.gcm.QuickstartPreferences;
 import com.ifconit.oyedelivery.gcm.RegistrationIntentService;
-import com.ifconit.oyedelivery.gcm.WakeLocker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+       /* try{
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -64,7 +64,11 @@ public class LoginActivity extends AppCompatActivity {
 
         }catch (RuntimeException re){
             re.printStackTrace();
-        }
+        }*/
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_login);
 
         token=GlobalClass.getToken(this);
@@ -80,11 +84,7 @@ public class LoginActivity extends AppCompatActivity {
        // tvForgotPass=(TextView)findViewById(R.id.tvForgetPass);
         btSignIn=(Button)findViewById(R.id.btSignIn);
 
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
+
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -104,6 +104,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
         btSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,24 +285,24 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Receiving push messages
      * */
-    private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+   /* private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String newMessage = intent.getExtras().getString("message");
             // Waking up mobile if it is sleeping
             WakeLocker.acquire(getApplicationContext());
-            /**
+            *//**
              * Take appropriate action on this message
              * depending upon your app requirement
              * For now i am just displaying it on the screen
-             * */
+             * *//*
             // Showing received message
            // Log.e("push Message", "1"+newMessage);
             //Toast.makeText(getApplicationContext(), "New Message: " + newMessage, Toast.LENGTH_LONG).show();
             // Releasing wake lock
             WakeLocker.release();
         }
-    };
+    };*/
 
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
@@ -319,7 +325,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onDestroy() {
 
             try {
-                unregisterReceiver(mHandleMessageReceiver);
+              //  unregisterReceiver(mHandleMessageReceiver);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -331,7 +337,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onPause(){
 
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+      //  LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
 
         super.onPause();
     }
@@ -341,8 +347,8 @@ public class LoginActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onResume();
 
-            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+//            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+//                    new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
 
     }
 }//close Activity

@@ -24,10 +24,11 @@ public class CustomOrderList extends ArrayAdapter<String> {
     ArrayList<String>alAddr;
     ArrayList<String>alStatus;
     ArrayList<String>alexpDelTime;
+    ArrayList<String> alAckStatus;
 
     private Activity context;
 
-    public CustomOrderList(Context context,ArrayList<String>alRefNo,ArrayList<String>alStatus,ArrayList<String>alDate, ArrayList<String>alAmount,ArrayList<String>alRestName, ArrayList<String>alAddr,ArrayList<String> alExpDelTime) {
+    public CustomOrderList(Context context, ArrayList<String> alRefNo, ArrayList<String> alStatus, ArrayList<String> alDate, ArrayList<String> alAmount, ArrayList<String> alRestName, ArrayList<String> alAddr, ArrayList<String> alExpDelTime, ArrayList<String> alAckStatus) {
         super(context, R.layout.orderlist_item, alRefNo);
         this.context = (Activity) context;
         this.alRefNo=alRefNo;
@@ -37,6 +38,7 @@ public class CustomOrderList extends ArrayAdapter<String> {
         this.alRestName=alRestName;
         this.alAddr=alAddr;
         this.alexpDelTime=alExpDelTime;
+        this.alAckStatus=alAckStatus;
     }
 
     @Override

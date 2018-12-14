@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
+       /* try{
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
 
         }catch (RuntimeException re){
             re.printStackTrace();
-        }
+        }*/
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

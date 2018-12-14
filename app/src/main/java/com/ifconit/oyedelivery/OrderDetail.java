@@ -167,7 +167,7 @@ public class OrderDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+       /* try{
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -175,7 +175,7 @@ public class OrderDetail extends AppCompatActivity {
 
         }catch (RuntimeException re){
             re.printStackTrace();
-        }
+        }*/
         setContentView(R.layout.order_details);
 
         ActionBar ab = getSupportActionBar();

@@ -83,7 +83,7 @@ public class FinanceList  extends BaseDrawer  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+       /* try{
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -91,7 +91,7 @@ public class FinanceList  extends BaseDrawer  {
 
         }catch (RuntimeException re){
             re.printStackTrace();
-        }
+        }*/
        // setContentView(R.layout.finance_list);
         getLayoutInflater().inflate(R.layout.finance_list, frameLayout);
 

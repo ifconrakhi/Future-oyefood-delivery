@@ -3,45 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ifconit.oyedelivery">
 
-    <permission
-        android:name="com.ifconit.oyedelivery.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-
-       <uses-permission android:name="android.permission.WAKE_LOCK" />
-       <uses-permission android:name="android.permission.VIBRATE" />
-       <uses-permission android:name="com.ksinfotech.oyefood.permission.C2D_MESSAGE" />
-       <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
-
-
+    //======================permissions for map========================
+    <permission
+        android:name="com.ifconit.oyedelivery.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"
+        tools:ignore="UniquePermission" />
+    <uses-permission android:name="com.ifconit.oyedelivery.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        tools:ignore="UniquePermission" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!--<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission-sdk-23 android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera"></uses-feature>
 
 
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+
+    <permission
+        android:name="com.ifconit..permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.ifconit.oyedelivery.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -67,7 +68,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity"
-            android:label="Oye Food Delivery">
+            android:label="Oye Food Delivery"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -154,9 +156,12 @@
         </receiver>
         <receiver android:name=".MyStartServiceReceiver" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:enabled="true"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
@@ -166,22 +171,13 @@
                 <!-- Receives the registration id. -->
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.ksinfotech.oyefood" />
+                <category android:name="com.ifconit.oyedelivery" />
             </intent-filter>
         </receiver>
 
-
-        <service
-            android:name="com.ifconit.oyedelivery.NotifyService"
-            android:enabled="true" >
-        </service>
-
-        <service android:name=".MyService" android:process=":my_service" />
-
         <service
             android:name="com.ifconit.oyedelivery.gcm.GCMIntentService"
-            android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>

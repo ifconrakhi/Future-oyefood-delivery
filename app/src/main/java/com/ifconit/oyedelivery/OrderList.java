@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -62,10 +61,11 @@ public class OrderList extends BaseDrawer {
     ListView lvOrderList;
     ProgressDialog pDialog;
     String code, message, result, token, userId, strBaseUrl, orderId, refNo, finalAmount, statusFlag, orderDate, locality, restName, status;
-    String expDelTime, cws,intentFrom,gcmOrderId,gcmTitle,currentDateTime;
+    String expDelTime, cws,intentFrom="",gcmOrderId,gcmTitle,currentDateTime,notifStatus;
     SharedPreferences prefsUid;
+    SharedPreferences.Editor editor;
     public static final String PREFS_UID = "loginUserId";
-    public static ArrayList<String> alOrderId, alRefNo, alStatus, alDate, alAmount, alRestName, alAddr, alExpDelTime;
+    public static ArrayList<String> alOrderId, alRefNo, alStatus, alDate, alAmount, alRestName, alAddr, alExpDelTime,alAckStatus;
     CustomOrderList clAdapter;
     TextView tvNoOrder;
     String cartStatus = "2";
@@ -86,7 +86,7 @@ public class OrderList extends BaseDrawer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
+       /* try {
             //android O fix bug orientation
             if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -94,7 +94,7 @@ public class OrderList extends BaseDrawer {
 
         } catch (RuntimeException re) {
             re.printStackTrace();
-        }
+        }*/
         getLayoutInflater().inflate(R.layout.order_list, frameLayout);
 
         /*Intent mServiceIntent = new Intent(this, LocationService.class);
@@ -108,6 +108,10 @@ public class OrderList extends BaseDrawer {
 
         prefsUid = getSharedPreferences(PREFS_UID, 0);
         userId = prefsUid.getString("uid", "");
+        notifStatus=prefsUid.getString("notifStatus","0");
+        gcmTitle=prefsUid.getString("title","");
+        gcmOrderId=prefsUid.getString("order_id","");
+
         tvNoOrder = (TextView) findViewById(R.id.txtvwNoOrder);
         lvOrderList = (ListView) findViewById(R.id.lvOrderList);
 
@@ -147,14 +151,22 @@ public class OrderList extends BaseDrawer {
                 if (b.containsKey("title")){
                     gcmTitle=b.getString("title");
                     gcmOrderId=b.getString("order_id");
+                    intentFrom=b.getString("from");
 
-                    showGCMDialog();
+                    //showGCMDialog();
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
 
+        }
 
+        Log.d("JSONURL","NotifStatus : "+notifStatus+" intentFrom : "+intentFrom);
+
+        if(notifStatus.equalsIgnoreCase("1")||intentFrom.equalsIgnoreCase("GCM")){
+            showGCMDialog();
+        }else{
+            getOrderList();
         }
 
       /*  if (!Utils.isGPSTurnOn(getApplicationContext())) {
@@ -267,9 +279,26 @@ public class OrderList extends BaseDrawer {
         lvOrderList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getApplicationContext(), OrderDetail.class);
-                i.putExtra("orderId", alOrderId.get(position));
-                startActivity(i);
+
+                try{
+
+                    if(alAckStatus.get(position).equalsIgnoreCase("0")){
+
+                        gcmOrderId=alOrderId.get(position);
+                        gcmTitle="New order "+gcmOrderId+" has been assigned to you of amount "+alAmount.get(position);
+                        showGCMDialog();
+
+                    }else{
+                        Intent i = new Intent(getApplicationContext(), OrderDetail.class);
+                        i.putExtra("orderId", alOrderId.get(position));
+                        startActivity(i);
+                    }
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 // finish();
             }
         });
@@ -298,11 +327,18 @@ public class OrderList extends BaseDrawer {
                 public void onClick(View v) {
                     try {
                         f.dismiss();
+
                         GCMIntentService.vibrator.cancel();
                         GCMIntentService.mMediaPlayer.stop();
                         getAcknowledgement();
-                    }catch (Exception e){
+
+                    }catch (NullPointerException npe){
+                        npe.printStackTrace();
+                        getAcknowledgement();
+                    }
+                      catch (Exception e){
                         e.printStackTrace();
+                          getAcknowledgement();
                     }
                 }
             });
@@ -339,12 +375,13 @@ public class OrderList extends BaseDrawer {
                     if (code.equalsIgnoreCase("200")) {
                         rlProgress.setVisibility(View.GONE);
                         Toast.makeText(OrderList.this, message, Toast.LENGTH_SHORT).show();
-                        if (Utils.isConnected(getApplicationContext())) {
-                            // new AsyncOrderList().execute();
-                            getOrderList();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "No internet connection available!!", Toast.LENGTH_SHORT).show();
-                        }
+
+                        editor=prefsUid.edit();
+                        editor.putString("notifStatus", "0");
+                        editor.putString("order_id", "");
+                        editor.putString("title", "");
+                        editor.commit();
+                        getOrderList();
 
                     }else if (code.equalsIgnoreCase("501")) {
 
@@ -375,6 +412,12 @@ public class OrderList extends BaseDrawer {
                     } else {
                         rlProgress.setVisibility(View.GONE);
                         Toast.makeText(OrderList.this, message, Toast.LENGTH_SHORT).show();
+                        editor=prefsUid.edit();
+                        editor.putString("notifStatus", "0");
+                        editor.putString("order_id", "");
+                        editor.putString("title", "");
+                        editor.commit();
+                        getOrderList();
                        // tvNoOrder.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
@@ -407,7 +450,7 @@ public class OrderList extends BaseDrawer {
         }
     }
 
-    private void startVibration() {
+   /* private void startVibration() {
 
 
        try{
@@ -421,7 +464,7 @@ public class OrderList extends BaseDrawer {
 
 
 
-             /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+             *//*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                    createOneShotVibrationUsingVibrationEffect();
 
@@ -429,7 +472,7 @@ public class OrderList extends BaseDrawer {
 
                    createWaveFormVibrationUsingVibrationEffectAndAmplitude();
 
-               }*/
+               }*//*
 
 
 
@@ -551,7 +594,7 @@ public class OrderList extends BaseDrawer {
 
         }
 
-    }
+    }*/
 
 
     @Override
@@ -596,6 +639,7 @@ public class OrderList extends BaseDrawer {
         alOrderId=new ArrayList<>();
         alStatus=new ArrayList<>();
         alExpDelTime = new ArrayList<>();
+        alAckStatus=new ArrayList<>();
 
         String yourJsonStringUrl = strBaseUrl+"order_list_delivery&user_id="+userId+"&cart_status="+cartStatus+"&token="+token;// set your json string url here
         rlProgress.setVisibility(View.VISIBLE);
@@ -662,6 +706,7 @@ public class OrderList extends BaseDrawer {
                         restName = c.getString("restaurant_name");
                         status=c.getString("cart_status");
                         expDelTime = c.getString("expected_del_time");
+                       String ackStatus=c.getString("ack_status");
 
                         alRefNo.add(refNo);
                         alDate.add(orderDate);
@@ -671,6 +716,7 @@ public class OrderList extends BaseDrawer {
                         alOrderId.add(orderId);
                         alStatus.add(status);
                         alExpDelTime.add(expDelTime);
+                        alAckStatus.add(ackStatus);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -682,7 +728,7 @@ public class OrderList extends BaseDrawer {
                 try {
                     tvKm.setText(total_distance + " Km");
                     Toast.makeText(getApplicationContext(), "Data loaded successfully..", Toast.LENGTH_SHORT).show();
-                    clAdapter = new CustomOrderList(OrderList.this, alRefNo, alStatus, alDate, alAmount, alRestName, alAddr, alExpDelTime);
+                    clAdapter = new CustomOrderList(OrderList.this, alRefNo, alStatus, alDate, alAmount, alRestName, alAddr, alExpDelTime,alAckStatus);
                     lvOrderList.setAdapter(clAdapter);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
@@ -918,14 +964,25 @@ public class OrderList extends BaseDrawer {
 
     @Override
     public void onResume() {
-        cartStatus=getIntent().getStringExtra("cart_status");
-        Log.d("StartService","OnResume status "+cartStatus);
-        super.onResume();
-        if ((int)Build.VERSION.SDK_INT < 23) {
-            // make the device update its location
+        try {
+            cartStatus = getIntent().getStringExtra("cart_status");
+            Log.d("StartService", "OnResume status " + cartStatus);
+            prefsUid = getSharedPreferences(PREFS_UID, 0);
+            userId = prefsUid.getString("uid", "");
+            notifStatus = prefsUid.getString("notifStatus", "0");
+            gcmTitle = prefsUid.getString("title", "");
+            gcmOrderId = prefsUid.getString("order_id", "");
+            Log.d("JSONURL", " onResume NotifStatus : " + notifStatus);
+            super.onResume();
+            if ((int) Build.VERSION.SDK_INT < 23) {
+                // make the device update its location
                 location.beginUpdates();
                 currentLat = String.valueOf(location.getLatitude());
                 currentLng = String.valueOf(location.getLongitude());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 
@@ -1334,5 +1391,7 @@ public class OrderList extends BaseDrawer {
             currentLng = String.valueOf(location.getLongitude());
         }
     }
+
+
 
 }

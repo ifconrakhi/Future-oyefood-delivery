@@ -98,7 +98,7 @@ import im.delight.android.location.SimpleLocation;
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            try{
+           /* try{
                 //android O fix bug orientation
                 if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -106,7 +106,7 @@ import im.delight.android.location.SimpleLocation;
 
             }catch (RuntimeException re){
                 re.printStackTrace();
-            }
+            }*/
             getLayoutInflater().inflate(R.layout.attendance, frameLayout);
 
             imgvwAttendance.setVisibility(View.VISIBLE);

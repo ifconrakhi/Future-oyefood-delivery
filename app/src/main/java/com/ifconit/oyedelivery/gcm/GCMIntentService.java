@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -19,7 +19,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -34,6 +33,8 @@ import com.ifconit.oyedelivery.OrderList;
 import com.ifconit.oyedelivery.R;
 import com.ifconit.oyedelivery.SplashActivity;
 
+import java.util.Random;
+
 
 public class GCMIntentService extends GcmListenerService {
 
@@ -42,34 +43,121 @@ public class GCMIntentService extends GcmListenerService {
     public static Ringtone ringtoneSound;
     public static MediaPlayer mMediaPlayer;
      NotificationManager notificationManager;
+    SharedPreferences prefsUid;
+    SharedPreferences.Editor editor;
+    public static final String PREFS_UID = "loginUserId";
     @Override
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
+
+        String title=null,orderId=null;
+
+        try {
+            JSONObject jsonobj=new JSONObject(message);
+             title = jsonobj.getString("alert");
+             orderId = jsonobj.getString("order_id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
+        Log.d(TAG, "title: " + title);
+        Log.d(TAG, "orderId: " + orderId);
 
-//        if (from.startsWith("/topics/")) {
-//            // message received from some topic.
-//        } else {
-//            // normal downstream message.
-//        }
 
-        sendNotification(message);
+        sendNotification(title,orderId);
+
+
+       /* if (from.startsWith("/topics/")) {
+
+            // message received from some topic.
+        } else {
+            // normal downstream message.
+        }*/
+
+
     }
 
-    private void sendNotification(String message) {
+    private void sendNotification(String title, String orderId) {
         try{
+            final String name = getApplicationContext().getString(R.string.app_name);
+            Intent intent = new Intent(this, OrderList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("order_id",orderId);
+            intent.putExtra("title",title);
+            intent.putExtra("from","GCM");
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
-            createNotification(message);
-            callActivityDirect(message);
+           // Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(name)
+                    .setContentText(title)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
+                    .setContentIntent(pendingIntent);
 
+            Random random = new Random();
+            int m = random.nextInt(9999 - 1000) + 1000;
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(m, notificationBuilder.build());
+
+            prefsUid = getSharedPreferences(PREFS_UID, 0);
+            editor = prefsUid.edit();
+            editor.putString("notifStatus", "1");
+            editor.putString("order_id", orderId);
+            editor.putString("title", title);
+            editor.commit();
+
+
+            long[] mVibratePattern = {0, 900, 100, 800, 200, 700, 300, 600, 400, 500, 500, 400, 600, 300, 700, 200, 800, 100, 900,};
+            // play vibration
+            vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(mVibratePattern,1);
+
+            AudioManager mobilemode = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            mobilemode.setStreamVolume(AudioManager.STREAM_ALARM,mobilemode.getStreamMaxVolume(AudioManager.STREAM_ALARM),0);
+            mobilemode.setStreamVolume(AudioManager.STREAM_NOTIFICATION,mobilemode.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION),0);
+            mobilemode.setStreamVolume(AudioManager.STREAM_RING,mobilemode.getStreamMaxVolume(AudioManager.STREAM_RING),0);
+
+            try {
+                //Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_RINGTONE);
+                // Uri sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/" + R.raw.siren_for);  //Here is FILE_NAME is the name of file that you want to play
+                //  mMediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.siren_for);
+                mMediaPlayer=new MediaPlayer();
+                mMediaPlayer.setDataSource(this, defaultSoundUri);
+                //  final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (mobilemode.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
+                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+
+            // createNotification(message);
+           // callActivityDirect(message);
+
+        }catch (NumberFormatException e){
+            e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    public void createNotification(String message){
+   /* public void createNotification(String message){
         try{
             final String name = getApplicationContext().getString(R.string.app_name);
 
@@ -170,12 +258,12 @@ public class GCMIntentService extends GcmListenerService {
             }
 
 
-           /* Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_ALARM);
+           *//* Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_ALARM);
             ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
 
             if (ringtoneSound != null) {
                 ringtoneSound.play();
-             }*/
+             }*//*
 
             AudioManager mobilemode = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
             mobilemode.setStreamVolume(AudioManager.STREAM_ALARM,mobilemode.getStreamMaxVolume(AudioManager.STREAM_ALARM),0);
@@ -212,7 +300,7 @@ public class GCMIntentService extends GcmListenerService {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void callActivityDirect(String message){
         try{
@@ -234,7 +322,7 @@ public class GCMIntentService extends GcmListenerService {
     }
 
 
-    private void startVibration() {
+   /* private void startVibration() {
 
 
         try{
@@ -248,7 +336,7 @@ public class GCMIntentService extends GcmListenerService {
 
 
 
-               /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+               *//*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                    createOneShotVibrationUsingVibrationEffect();
 
@@ -256,7 +344,7 @@ public class GCMIntentService extends GcmListenerService {
 
                  //  createWaveFormVibrationUsingVibrationEffectAndAmplitude();
 
-               }*/
+               }*//*
 
 
 
@@ -385,6 +473,6 @@ public class GCMIntentService extends GcmListenerService {
 
         }
 
-    }
+    }*/
 
 }

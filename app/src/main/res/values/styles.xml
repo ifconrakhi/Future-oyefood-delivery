@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -26,9 +26,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="android:windowIsTranslucent">true</item>
         <item name="colorControlNormal">@color/textColor</item>
+
+    </style>
+
+    <style name="TextInputLayoutHintText">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:colorAccent" tools:ignore="NewApi">@color/white</item>
+        <item name="textColorError">@color/colorAccent</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="CalendarWeekDatText" parent="TextAppearance.AppCompat.Button">

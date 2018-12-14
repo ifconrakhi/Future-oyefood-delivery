@@ -7,7 +7,8 @@
     <string name="create_token_url">http://wsnew.oyefood.in/WS/services.php?mode=create_token</string>
     <string name="listFinance">List Finance</string>
 
-    <string name="gcm_defaultSenderId">45776743402</string>
+    <!--<string name="gcm_defaultSenderId">45776743402</string>-->
+    <string name="gcm_defaultSenderId">837746795494</string>
     <string name="default_notification_channel_title">OyeDelivery</string>
     <string name="default_notification_channel_id" translatable="false">channel_oyedelivery_01</string>
 
