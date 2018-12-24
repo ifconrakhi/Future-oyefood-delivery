@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B3000000">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:background="@color/white"
+            card_view:cardCornerRadius="4dp"
+            card_view:elevation="14dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/barTitle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/colorPrimary"
+                android:text="Acknowledge NOW "
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/textChange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Oye Food"
+                android:gravity="center"
+                android:textColor="@color/textColor"
+                android:background="@color/white"
+                android:layout_below="@+id/barTitle"
+                android:padding="20dp"/>
+
+            <View
+                android:id="@+id/v1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDarkGray"
+                android:layout_below="@+id/textChange"/>
+
+            <LinearLayout
+                android:layout_below="@+id/v1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/btnNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:text="No"
+                    android:textSize="18sp"
+                    android:visibility="visible"
+                    android:textColor="@color/colorGray"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDarkGray"/>
+
+                <Button
+                    android:id="@+id/btnYes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:text="Yes"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorGreen"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
+</FrameLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    >
+    <RelativeLayout
+        android:id="@+id/relImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@android:drawable/screen_background_dark"
+                />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Puja Kumari"
+                android:textColor="@color/colorBlack"
+                android:textSize="20dp"
+                android:layout_toRightOf="@+id/ivImage"
+                android:layout_marginLeft="10dp"
+                />
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last seen on 12:50PM"
+                android:textColor="@color/colorBlack"
+                android:textSize="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/ivImage"
+                android:layout_below="@+id/tvName"
+                android:layout_marginLeft="10dp"
+                />
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tvDemo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="16dp"
+        android:layout_below="@+id/relImg"
+        android:layout_marginTop="10dp"
+        android:text="This is the Demo Activity For view the user detail demo xml file"
+        />
+
+</RelativeLayout>

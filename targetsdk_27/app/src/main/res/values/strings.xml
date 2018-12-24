@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">OyeDelivery</string>
+    <string name="orderList">Order List</string>
+    <string name="AddTransaction">AddTransaction</string>
+    <string name="orderDetail">Order Detail</string>
+    <string name="base_url">http://wsnew.oyefood.in/WS/delivery_service.php?mode=</string>
+    <string name="create_token_url">http://wsnew.oyefood.in/WS/services.php?mode=create_token</string>
+    <string name="listFinance">List Finance</string>
+
+    <!--<string name="gcm_defaultSenderId">45776743402</string>-->
+    <string name="gcm_defaultSenderId">837746795494</string>
+    <string name="default_notification_channel_title">OyeDelivery</string>
+    <string name="default_notification_channel_id" translatable="false">channel_oyedelivery_01</string>
+
+    //=================================Value for Login=====================================
+    <string name="signIn">Sign-In</string>
+    <string name="newUser">New user register here</string>
+    <string name="call">Call</string>
+    <string name="hint_password">Enter Password</string>
+    <string name="hint_mobile">Enter Mobile No.</string>
+
+    //=================================Drawer Items=====================================
+    <string name="addTrans">Add Transaction</string>
+    <string name="listFinances">List Finance</string>
+    <string name="confirmedOrders">Confirmed Orders</string>
+    <string name="deliveredOrders">Delivered Orders</string>
+    <string name="inRouteOrders">In-Route Orders</string>
+    <string name="pending_count">All Pending Orders</string>
+    <string name="logout">Log-out</string>
+
+    //==============================Text value================================================
+    <string name="amountToReceive">Amount to Receive</string>
+    <string name="amountToPay">Amount to Pay</string>
+    <string name="inRoute">In-Route</string>
+    <string name="addTransaction">Transaction</string>
+    <string name="delivered">Delivered</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="itemName">Item Name</string>
+    <string name="quantity">Quantity</string>
+    <string name="customerDetail">Customer Detail</string>
+    <string name="restaurentDetail">Reataurant Detail</string>
+    <string name="itemDetail">Item Detail</string>
+    <string name="status">Status</string>
+    <string name="attendance">Attendance</string>
+
+    <string name="gps.lable.gps">Warning</string>
+    <string name="gps.lable.warning_message">You need to start GPS. To access your location!!</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="showGpsTitle">Oye Food</string>
+
+    <string name="spinner_title">Select Category</string>
+    <string-array name="expencecategory_arrays">
+        <item>Select Category</item>
+        <item>Oye Food</item>
+        <item>Vegetable</item>
+        <item>Grocery</item>
+        <item>Fruits</item>
+        <item>Advance</item>
+        <item>Office Expense</item>
+        <item>Others</item>
+    </string-array>
+</resources>

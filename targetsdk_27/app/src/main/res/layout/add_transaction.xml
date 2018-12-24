@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:padding="5dp"
+    >
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        >
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+       >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:id="@+id/mainRoot">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Select a Restaurant"
+                android:layout_weight="0.6"
+                style="?android:attr/spinnerItemStyle"
+                android:id="@+id/spinnerOrderRef"
+                >
+            </Spinner>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="0.4"
+                android:id="@+id/userOrder"
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Amount Paid (Restaurant)"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_weight="0.6"
+                    />
+                <EditText
+                    android:id="@+id/etAmountPaid"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Rs."
+                    android:background="@null"
+                    android:inputType="number"
+                    android:focusableInTouchMode="true"
+                    android:imeOptions="actionDone"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.4"
+                    />
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorGray"
+                android:layout_below="@+id/ll1"
+                />
+
+            <LinearLayout
+                android:id="@+id/ll2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/view1"
+                android:weightSum="1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="Amount Received(Customer)"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_weight="0.6"
+                    />
+                <EditText
+                    android:id="@+id/etTotalAmount"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Rs"
+                    android:imeOptions="actionDone"
+                    android:background="@null"
+                    android:inputType="number"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginLeft="10dp"
+
+                    android:layout_weight="0.4"/>
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorGray"
+                android:layout_below="@+id/ll2"
+                />
+
+            <LinearLayout
+                android:id="@+id/ll3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/view2"
+                android:weightSum="1"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="KM (Travel)"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorBlack"
+                    android:layout_weight="0.6"
+                    />
+                <EditText
+                    android:id="@+id/etKm"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:hint="15"
+                    android:imeOptions="actionDone"
+                    android:background="@null"
+                    android:focusableInTouchMode="true"
+                    android:inputType="number"
+                    android:textColorHint="@color/colorGray"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="0.4"/>
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorGray"
+                android:layout_below="@+id/ll3"
+                />
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorGray"
+                android:layout_below="@+id/ll7"
+                />
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:text="Submit"
+                android:layout_gravity="bottom"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:background="@color/colorPrimary"
+                />
+        </LinearLayout>
+    </ScrollView>
+    </FrameLayout>
+    </RelativeLayout>
