@@ -587,8 +587,6 @@ public class OrderDetail extends AppCompatActivity {
 
     }
 
-
-
     public  void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
