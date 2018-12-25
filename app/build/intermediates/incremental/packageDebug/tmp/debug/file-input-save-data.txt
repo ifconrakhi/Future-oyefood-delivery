@@ -1,0 +1,23 @@
+#Internal package file, do not edit.
+#Sat Nov 10 19:34:57 PST 2018
+2.base=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+0.path=classes.dex
+2.baseType=DIRECTORY
+3.base=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
+2.set=DEX
+1.path=classes.dex
+4.base=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
+count=5
+2.path=classes2.dex
+4.set=ASSET
+3.path=fonts/materialdrawerfont.ttf
+3.baseType=DIRECTORY
+1.set=DEX
+4.path=crashlytics-build.properties
+1.baseType=DIRECTORY
+0.base=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+0.baseType=DIRECTORY
+3.set=ASSET
+1.base=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+4.baseType=DIRECTORY
+0.set=DEX

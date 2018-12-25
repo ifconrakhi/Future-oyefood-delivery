@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.afollestad:material-camera-0.4.4">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/material-camera-0.4.4.aar/cc9d0d26cbd48397cfc916a2df10d147/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/material-camera-0.4.4.aar/cc9d0d26cbd48397cfc916a2df10d147/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/material-camera-0.4.4.aar/cc9d0d26cbd48397cfc916a2df10d147/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.afollestad/material-camera/0.4.4/ac4028adca0b7d97a963bc520b4689376605c43d/material-camera-0.4.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

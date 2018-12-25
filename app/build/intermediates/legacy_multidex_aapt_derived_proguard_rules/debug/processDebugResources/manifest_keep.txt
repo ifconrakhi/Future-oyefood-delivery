@@ -1,0 +1,2 @@
+# Referenced at D:\StudioProjects\MyProject\WorkingProject\Future-oyefood-delivery\app\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:51
+-keep class com.ifconit.oyedelivery.MyApplication { <init>(...); }

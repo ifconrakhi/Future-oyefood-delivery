@@ -1,0 +1,10 @@
+#Sat Nov 10 19:34:57 PST 2018
+path.2=classes2.dex
+path.1=classes.dex
+path.0=classes.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.2=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+base.1=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+base.0=D\:\\StudioProjects\\MyProject\\WorkingProject\\Future-oyefood-delivery\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
