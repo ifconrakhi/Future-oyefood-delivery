@@ -237,11 +237,21 @@ public class GCMIntentService extends GcmListenerService {
                         .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                         .setPriority(Notification.PRIORITY_HIGH);
             }
+
+            Random random = new Random();
+            int m = random.nextInt(9999 - 1000) + 1000;
+
             Notification notification = builder.build();
-            notificationManager.notify(NOTIFY_ID, notification);
+            notificationManager.notify(m, notification);
 
 
 
+            prefsUid = getSharedPreferences(PREFS_UID, 0);
+            editor = prefsUid.edit();
+            editor.putString("notifStatus", "1");
+            editor.putString("order_id", order_id);
+            editor.putString("title", title);
+            editor.commit();
 
             long[] mVibratePattern = {0, 900, 100, 800, 200, 700, 300, 600, 400, 500, 500, 400, 600, 300, 700, 200, 800, 100, 900,};
             // play vibration
@@ -253,12 +263,12 @@ public class GCMIntentService extends GcmListenerService {
             }
 
 
-            Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_ALARM);
+           /* Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_ALARM);
             ringtoneSound = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
 
             if (ringtoneSound != null) {
                 ringtoneSound.play();
-             }
+             }*/
 
             AudioManager mobilemode = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
           //  mobilemode.setStreamVolume(AudioManager.STREAM_ALARM,mobilemode.getStreamMaxVolume(AudioManager.STREAM_ALARM),0);
